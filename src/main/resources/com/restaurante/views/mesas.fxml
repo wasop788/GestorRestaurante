@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="com.restaurante.controller.MesasController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <!-- Barra superior -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: #2196F3; -fx-padding: 12 20 12 20;">
+            <Label text="🍽 Gestor Restaurante"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblUsuario" text=""
+                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Button text="Carta" onAction="#abrirCarta"
+                    style="-fx-background-color: white; -fx-text-fill: #2196F3; -fx-cursor: hand;"/>
+            <Button text="Cerrar sesión" onAction="#cerrarSesion"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Grid de mesas -->
+    <center>
+        <VBox spacing="15" alignment="TOP_CENTER">
+            <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+            <Label text="Selecciona una mesa"
+                   style="-fx-font-size: 15px; -fx-text-fill: #555;"/>
+            <FlowPane fx:id="flowMesas" hgap="15" vgap="15" alignment="CENTER"/>
+        </VBox>
+    </center>
+
+    <!-- Leyenda -->
+    <bottom>
+        <HBox spacing="20" alignment="CENTER"
+              style="-fx-padding: 10; -fx-background-color: #eeeeee;">
+            <Label text="🟢 Libre" style="-fx-font-size: 12px;"/>
+            <Label text="🔴 Ocupada" style="-fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

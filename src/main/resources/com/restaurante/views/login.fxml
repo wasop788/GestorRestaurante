@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/21"
+      fx:controller="com.restaurante.controller.LoginController"
+      alignment="CENTER" spacing="15"
+      style="-fx-background-color: #f0f0f0;">
+
+    <padding><Insets top="60" bottom="60" left="80" right="80"/></padding>
+
+    <Label text="🍽 Gestor Restaurante"
+           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+    <Label text="Iniciar sesión"
+           style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+
+    <TextField fx:id="txtUsuario" promptText="Usuario"
+               style="-fx-font-size: 14px;" maxWidth="260"/>
+
+    <PasswordField fx:id="txtPassword" promptText="Contraseña"
+                   style="-fx-font-size: 14px;" maxWidth="260"/>
+
+    <Label fx:id="lblError" text=""
+           style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+
+    <Button fx:id="btnLogin" text="Entrar"
+            onAction="#handleLogin"
+            defaultButton="true"
+            maxWidth="260"
+            style="-fx-background-color: #2196F3; -fx-text-fill: white;
+                   -fx-font-size: 14px; -fx-cursor: hand; -fx-pref-height: 36px;"/>
+</VBox>

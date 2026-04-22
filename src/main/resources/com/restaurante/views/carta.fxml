@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="com.restaurante.controller.CartaController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: #333; -fx-padding: 10 20 10 20;">
+            <Button text="← Volver" onAction="#volver"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+            <Label text="Gestión de Carta"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane>
+            <TableView fx:id="tableProductos" minWidth="380">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                    <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="90"/>
+                    <TableColumn fx:id="colPrecio" text="Precio" prefWidth="70"/>
+                    <TableColumn fx:id="colDisponible" text="Activo" prefWidth="55"/>
+                </columns>
+            </TableView>
+
+            <VBox spacing="12" minWidth="280">
+                <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                <Label text="Datos del producto"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <TextField fx:id="txtNombre" promptText="Nombre"/>
+                <TextField fx:id="txtDescripcion" promptText="Descripción"/>
+                <TextField fx:id="txtPrecio" promptText="Precio (ej: 9.50)"/>
+                <ComboBox fx:id="cmbCategoria" maxWidth="Infinity"
+                          promptText="Categoría"/>
+                <CheckBox fx:id="chkDisponible" text="Disponible" selected="true"/>
+                <HBox spacing="10">
+                    <Button text="Guardar" onAction="#guardar" HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;"/>
+                    <Button text="Nuevo" onAction="#nuevo" HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-cursor: hand;"/>
+                </HBox>
+                <Button text="Eliminar" onAction="#eliminar" maxWidth="Infinity"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-cursor: hand;"/>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>
