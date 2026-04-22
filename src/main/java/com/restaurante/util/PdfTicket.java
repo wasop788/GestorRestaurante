@@ -16,7 +16,9 @@ import java.util.Map;
 public class PdfTicket {
 
     public static String generarTicket(Pedido pedido, Mesa mesa, List<LineaPedido> lineas) {
-        String ruta = "ticket_mesa" + mesa.getNumero() + "_pedido" + pedido.getId() + ".pdf";
+        java.io.File carpeta = new java.io.File("facturas");
+        if (!carpeta.exists()) carpeta.mkdirs();
+        String ruta = "facturas/ticket_mesa" + mesa.getNumero() + "_pedido" + pedido.getId() + ".pdf";
 
         ConfiguracionDAO configDAO = new ConfiguracionDAO();
         Map<String, String> config = configDAO.obtenerTodo();
