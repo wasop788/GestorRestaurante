@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -21,12 +22,14 @@ public class MesasController implements Initializable {
 
     @FXML private FlowPane flowMesas;
     @FXML private Label lblUsuario;
+    @FXML private Button btnGestionMesas;
 
     private final MesaDAO mesaDAO = new MesaDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblUsuario.setText("Hola, " + Sesion.getUsuarioActual().getNombre());
+        btnGestionMesas.setVisible(Sesion.getUsuarioActual().getRol().equals("admin"));
         cargarMesas();
     }
 
@@ -79,12 +82,23 @@ public class MesasController implements Initializable {
     }
 
     @FXML
-    private void abrirCarta() {
-        // Solo admin
-        if (!Sesion.getUsuarioActual().getRol().equals("admin")) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.WARNING
+    private void abrirGestionMesas() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/restaurante/views/gestion_mesas.fxml")
             );
+            Stage stage = (Stage) flowMesas.getScene().getWindow();
+            stage.setScene(new Scene(loader.load(), 750, 550));
+            stage.setTitle("Gestión de Mesas");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void abrirCarta() {
+        if (!Sesion.getUsuarioActual().getRol().equals("admin")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Acceso denegado");
             alert.setContentText("Solo el administrador puede gestionar la carta.");
             alert.showAndWait();
