@@ -17,6 +17,8 @@
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblUsuario" text=""
                    style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Button fx:id="btnGestionMesas" text="Mesas" onAction="#abrirGestionMesas"
+                    style="-fx-background-color: white; -fx-text-fill: #333; -fx-cursor: hand;"/>
             <Button text="Carta" onAction="#abrirCarta"
                     style="-fx-background-color: white; -fx-text-fill: #2196F3; -fx-cursor: hand;"/>
             <Button text="Cerrar sesión" onAction="#cerrarSesion"
@@ -42,4 +44,5 @@
             <Label text="🔴 Ocupada" style="-fx-font-size: 12px;"/>
         </HBox>
     </bottom>
+
 </BorderPane>
