@@ -17,6 +17,8 @@
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblUsuario" text=""
                    style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Button fx:id="btnGestionUsuarios" text="Usuarios" onAction="#abrirGestionUsuarios"
+                    style="-fx-background-color: white; -fx-text-fill: #333; -fx-cursor: hand;"/>
             <Button fx:id="btnGestionMesas" text="Mesas" onAction="#abrirGestionMesas"
                     style="-fx-background-color: white; -fx-text-fill: #333; -fx-cursor: hand;"/>
             <Button text="Carta" onAction="#abrirCarta"
