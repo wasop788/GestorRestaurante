@@ -23,13 +23,16 @@ public class MesasController implements Initializable {
     @FXML private FlowPane flowMesas;
     @FXML private Label lblUsuario;
     @FXML private Button btnGestionMesas;
+    @FXML private Button btnGestionUsuarios;
 
     private final MesaDAO mesaDAO = new MesaDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblUsuario.setText("Hola, " + Sesion.getUsuarioActual().getNombre());
-        btnGestionMesas.setVisible(Sesion.getUsuarioActual().getRol().equals("admin"));
+        boolean esAdmin = Sesion.getUsuarioActual().getRol().equals("admin");
+        btnGestionMesas.setVisible(esAdmin);
+        btnGestionUsuarios.setVisible(esAdmin);
         cargarMesas();
     }
 
@@ -90,6 +93,20 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestión de Mesas");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void abrirGestionUsuarios() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/restaurante/views/gestion_usuarios.fxml")
+            );
+            Stage stage = (Stage) flowMesas.getScene().getWindow();
+            stage.setScene(new Scene(loader.load(), 750, 550));
+            stage.setTitle("Gestión de Usuarios");
         } catch (Exception e) {
             e.printStackTrace();
         }

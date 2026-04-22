@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="com.restaurante.controller.GestionUsuariosController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: #333; -fx-padding: 10 20 10 20;">
+            <Button text="← Volver" onAction="#volver"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+            <Label text="Gestión de Usuarios"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane>
+            <!-- Tabla de usuarios -->
+            <TableView fx:id="tableUsuarios" minWidth="380">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="140"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="100"/>
+                    <TableColumn fx:id="colRol" text="Rol" prefWidth="80"/>
+                    <TableColumn fx:id="colActivo" text="Activo" prefWidth="55"/>
+                </columns>
+            </TableView>
+
+            <!-- Formulario -->
+            <VBox spacing="12" minWidth="280">
+                <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                <Label text="Datos del usuario"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <TextField fx:id="txtNombre" promptText="Nombre completo"/>
+                <TextField fx:id="txtUsuario" promptText="Nombre de usuario"/>
+                <PasswordField fx:id="txtPassword" promptText="Contraseña"/>
+                <ComboBox fx:id="cmbRol" maxWidth="Infinity" promptText="Rol"/>
+                <CheckBox fx:id="chkActivo" text="Cuenta activa" selected="true"/>
+                <HBox spacing="10">
+                    <Button text="Guardar" onAction="#guardar" HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;"/>
+                    <Button text="Nuevo" onAction="#nuevo" HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-cursor: hand;"/>
+                </HBox>
+                <Button text="Eliminar" onAction="#eliminar" maxWidth="Infinity"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-cursor: hand;"/>
+                <Label fx:id="lblMensaje" text=""
+                       style="-fx-font-size: 12px;"/>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>
