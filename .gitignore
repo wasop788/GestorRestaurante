@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Proyecto ###
+facturas/
+instalador/
+dependency-reduced-pom.xml
