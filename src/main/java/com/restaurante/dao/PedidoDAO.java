@@ -121,6 +121,17 @@ public class PedidoDAO {
         }
     }
 
+    public boolean eliminarPedidoVacio(int idPedido) {
+        String sql = "DELETE FROM pedidos WHERE id = ? AND total = 0";
+        try (PreparedStatement ps = Conexion.getConexion().prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar pedido vacío: " + e.getMessage());
+            return false;
+        }
+    }
+
     private void actualizarTotal(int idPedido) {
         String sql = "UPDATE pedidos SET total = (SELECT SUM(subtotal) FROM lineas_pedido WHERE id_pedido = ?) WHERE id = ?";
         try (PreparedStatement ps = Conexion.getConexion().prepareStatement(sql)) {

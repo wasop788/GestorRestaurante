@@ -7,7 +7,6 @@ import com.restaurante.model.LineaPedido;
 import com.restaurante.model.Mesa;
 import com.restaurante.model.Pedido;
 import com.restaurante.model.Producto;
-import com.restaurante.util.PdfTicket;
 import com.restaurante.util.Sesion;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,7 +14,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -60,11 +61,11 @@ public class PedidoController implements Initializable {
 
         lblTitulo.setText("Mesa " + mesa.getNumero());
 
-        // Buscar pedido abierto o crear uno nuevo
+        // Buscar pedido abierto existente o crear uno nuevo
         pedidoActual = pedidoDAO.obtenerPedidoAbiertoByMesa(mesa.getId());
         if (pedidoActual == null) {
             pedidoActual = pedidoDAO.crearPedido(mesa.getId(), Sesion.getUsuarioActual().getId());
-            mesaDAO.actualizarEstado(mesa.getId(), "ocupada");
+            // NO marcamos la mesa como ocupada aquí todavía
         }
 
         cargarProductos();
@@ -113,6 +114,12 @@ public class PedidoController implements Initializable {
                 seleccionado.getPrecio()
         );
         pedidoDAO.agregarLinea(linea);
+
+        // Marcar mesa como ocupada solo al añadir el primer producto
+        if (tablePedido.getItems().isEmpty()) {
+            mesaDAO.actualizarEstado(mesa.getId(), "ocupada");
+        }
+
         cargarLineas();
     }
 
@@ -134,15 +141,12 @@ public class PedidoController implements Initializable {
         confirm.setContentText("¿Cobrar " + String.format("%.2f", pedidoActual.getTotal()) + " € y liberar la mesa?");
         confirm.showAndWait().ifPresent(r -> {
             if (r == ButtonType.OK) {
-                // Cerrar pedido y liberar mesa
                 pedidoDAO.cerrarPedido(pedidoActual.getId());
                 mesaDAO.actualizarEstado(mesa.getId(), "libre");
 
-                // Generar PDF con el ticket
                 List<LineaPedido> lineas = pedidoDAO.obtenerLineas(pedidoActual.getId());
-                String rutaPdf = PdfTicket.generarTicket(pedidoActual, mesa, lineas);
+                String rutaPdf = com.restaurante.util.PdfTicket.generarTicket(pedidoActual, mesa, lineas);
 
-                // Avisar al usuario y preguntar si quiere abrir el PDF
                 if (rutaPdf != null) {
                     Alert exito = new Alert(Alert.AlertType.INFORMATION);
                     exito.setTitle("Ticket generado");
@@ -171,12 +175,19 @@ public class PedidoController implements Initializable {
 
     @FXML
     private void volver() {
+        // Si el pedido está vacío al salir, lo eliminamos y dejamos la mesa libre
+        if (tablePedido.getItems().isEmpty()) {
+            pedidoDAO.eliminarPedidoVacio(pedidoActual.getId());
+            mesaDAO.actualizarEstado(mesa.getId(), "libre");
+        }
+
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+            FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/mesas.fxml")
             );
-            stage.setScene(new javafx.scene.Scene(loader.load(), 750, 550));
+            stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestor Restaurante — Mesas");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

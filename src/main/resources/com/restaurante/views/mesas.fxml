@@ -46,12 +46,4 @@
         </VBox>
     </center>
 
-    <bottom>
-        <HBox spacing="20" alignment="CENTER"
-              style="-fx-padding: 10; -fx-background-color: #eeeeee;">
-            <Label text="🟢 Libre" style="-fx-font-size: 12px;"/>
-            <Label text="🔴 Ocupada" style="-fx-font-size: 12px;"/>
-        </HBox>
-    </bottom>
-
 </BorderPane>
