@@ -18,21 +18,21 @@
                    style="-fx-text-fill: white; -fx-font-size: 12px;"/>
             <Button fx:id="btnGestionUsuarios" text="Usuarios"
                     onAction="#abrirGestionUsuarios"
-                    style="-fx-background-color: white; -fx-text-fill: #333;
+                    style="-fx-background-color: white; -fx-text-fill: #2196F3;
                            -fx-cursor: hand; -fx-font-size: 12px;"/>
             <Button fx:id="btnGestionMesas" text="Mesas"
                     onAction="#abrirGestionMesas"
-                    style="-fx-background-color: white; -fx-text-fill: #333;
+                    style="-fx-background-color: white; -fx-text-fill: #2196F3;
                            -fx-cursor: hand; -fx-font-size: 12px;"/>
             <Button text="Carta" onAction="#abrirCarta"
                     style="-fx-background-color: white; -fx-text-fill: #2196F3;
                            -fx-cursor: hand; -fx-font-size: 12px;"/>
             <Button fx:id="btnConfiguracion" text="Config."
                     onAction="#abrirConfiguracion"
-                    style="-fx-background-color: white; -fx-text-fill: #333;
+                    style="-fx-background-color: white; -fx-text-fill: #2196F3;
                            -fx-cursor: hand; -fx-font-size: 12px;"/>
             <Button text="Salir" onAction="#cerrarSesion"
-                    style="-fx-background-color: transparent; -fx-text-fill: white;
+                    style="-fx-background-color: #f44336; -fx-text-fill: white;
                            -fx-cursor: hand; -fx-font-size: 12px;"/>
         </HBox>
     </top>
