@@ -3,6 +3,7 @@ package com.restaurante.controller;
 import com.restaurante.dao.MesaDAO;
 import com.restaurante.model.Mesa;
 import com.restaurante.util.Sesion;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ public class MesasController implements Initializable {
     @FXML private Label lblUsuario;
     @FXML private Button btnGestionMesas;
     @FXML private Button btnGestionUsuarios;
+    @FXML private Button btnConfiguracion;
 
     private final MesaDAO mesaDAO = new MesaDAO();
 
@@ -33,7 +35,13 @@ public class MesasController implements Initializable {
         boolean esAdmin = Sesion.getUsuarioActual().getRol().equals("admin");
         btnGestionMesas.setVisible(esAdmin);
         btnGestionUsuarios.setVisible(esAdmin);
+        btnConfiguracion.setVisible(esAdmin);
         cargarMesas();
+
+        Platform.runLater(() -> {
+            Stage stage = (Stage) flowMesas.getScene().getWindow();
+            stage.centerOnScreen();
+        });
     }
 
     public void cargarMesas() {
@@ -76,6 +84,7 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 850, 600));
             stage.setTitle("Mesa " + mesa.getNumero());
+            stage.centerOnScreen();
 
             PedidoController controller = loader.getController();
             controller.setMesa(mesa, this, stage);
@@ -93,6 +102,7 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestión de Mesas");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,6 +117,22 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestión de Usuarios");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void abrirConfiguracion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/restaurante/views/configuracion.fxml")
+            );
+            Stage stage = (Stage) flowMesas.getScene().getWindow();
+            stage.setScene(new Scene(loader.load(), 500, 450));
+            stage.setTitle("Configuración del Restaurante");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,6 +154,7 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestión de Carta");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,6 +170,7 @@ public class MesasController implements Initializable {
             Stage stage = (Stage) flowMesas.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 400, 300));
             stage.setTitle("Gestor Restaurante");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

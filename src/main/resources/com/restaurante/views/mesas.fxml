@@ -8,27 +8,35 @@
             fx:controller="com.restaurante.controller.MesasController"
             style="-fx-background-color: #f5f5f5;">
 
-    <!-- Barra superior -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="15"
-              style="-fx-background-color: #2196F3; -fx-padding: 12 20 12 20;">
+        <HBox alignment="CENTER_LEFT" spacing="10"
+              style="-fx-background-color: #2196F3; -fx-padding: 10 15 10 15;">
             <Label text="🍽 Gestor Restaurante"
-                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                   style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="lblUsuario" text=""
-                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-            <Button fx:id="btnGestionUsuarios" text="Usuarios" onAction="#abrirGestionUsuarios"
-                    style="-fx-background-color: white; -fx-text-fill: #333; -fx-cursor: hand;"/>
-            <Button fx:id="btnGestionMesas" text="Mesas" onAction="#abrirGestionMesas"
-                    style="-fx-background-color: white; -fx-text-fill: #333; -fx-cursor: hand;"/>
+            <Label fx:id="lblUsuario"
+                   style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+            <Button fx:id="btnGestionUsuarios" text="Usuarios"
+                    onAction="#abrirGestionUsuarios"
+                    style="-fx-background-color: white; -fx-text-fill: #333;
+                           -fx-cursor: hand; -fx-font-size: 12px;"/>
+            <Button fx:id="btnGestionMesas" text="Mesas"
+                    onAction="#abrirGestionMesas"
+                    style="-fx-background-color: white; -fx-text-fill: #333;
+                           -fx-cursor: hand; -fx-font-size: 12px;"/>
             <Button text="Carta" onAction="#abrirCarta"
-                    style="-fx-background-color: white; -fx-text-fill: #2196F3; -fx-cursor: hand;"/>
-            <Button text="Cerrar sesión" onAction="#cerrarSesion"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+                    style="-fx-background-color: white; -fx-text-fill: #2196F3;
+                           -fx-cursor: hand; -fx-font-size: 12px;"/>
+            <Button fx:id="btnConfiguracion" text="Config."
+                    onAction="#abrirConfiguracion"
+                    style="-fx-background-color: white; -fx-text-fill: #333;
+                           -fx-cursor: hand; -fx-font-size: 12px;"/>
+            <Button text="Salir" onAction="#cerrarSesion"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;
+                           -fx-cursor: hand; -fx-font-size: 12px;"/>
         </HBox>
     </top>
 
-    <!-- Grid de mesas -->
     <center>
         <VBox spacing="15" alignment="TOP_CENTER">
             <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
@@ -38,7 +46,6 @@
         </VBox>
     </center>
 
-    <!-- Leyenda -->
     <bottom>
         <HBox spacing="20" alignment="CENTER"
               style="-fx-padding: 10; -fx-background-color: #eeeeee;">

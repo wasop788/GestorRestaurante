@@ -3,6 +3,7 @@ package com.restaurante.util;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.restaurante.dao.ConfiguracionDAO;
 import com.restaurante.model.LineaPedido;
 import com.restaurante.model.Mesa;
 import com.restaurante.model.Pedido;
@@ -10,31 +11,48 @@ import com.restaurante.model.Pedido;
 import java.io.FileOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 public class PdfTicket {
 
     public static String generarTicket(Pedido pedido, Mesa mesa, List<LineaPedido> lineas) {
         String ruta = "ticket_mesa" + mesa.getNumero() + "_pedido" + pedido.getId() + ".pdf";
 
+        ConfiguracionDAO configDAO = new ConfiguracionDAO();
+        Map<String, String> config = configDAO.obtenerTodo();
+        String nombreRestaurante = config.getOrDefault("nombre", "Restaurante");
+        String direccion = config.getOrDefault("direccion", "");
+        String telefono = config.getOrDefault("telefono", "");
+        String cif = config.getOrDefault("cif", "");
+
         try {
             Document doc = new Document(PageSize.A6);
             PdfWriter.getInstance(doc, new FileOutputStream(ruta));
             doc.open();
 
-            // Fuentes
-            Font fuenteTitulo = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Font fuenteNormal = new Font(Font.FontFamily.HELVETICA, 10);
+            Font fuenteTitulo  = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            Font fuenteNormal  = new Font(Font.FontFamily.HELVETICA, 10);
             Font fuenteNegrita = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
             Font fuentePequena = new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC);
 
-            // Cabecera
-            Paragraph titulo = new Paragraph("RESTAURANTE", fuenteTitulo);
+            // Cabecera con datos del restaurante
+            Paragraph titulo = new Paragraph(nombreRestaurante.toUpperCase(), fuenteTitulo);
             titulo.setAlignment(Element.ALIGN_CENTER);
             doc.add(titulo);
 
-            Paragraph subtitulo = new Paragraph("Ticket de consumo", fuentePequena);
-            subtitulo.setAlignment(Element.ALIGN_CENTER);
-            doc.add(subtitulo);
+            if (!direccion.isEmpty()) {
+                Paragraph pDir = new Paragraph(direccion, fuentePequena);
+                pDir.setAlignment(Element.ALIGN_CENTER);
+                doc.add(pDir);
+            }
+            if (!telefono.isEmpty() || !cif.isEmpty()) {
+                String linea = "";
+                if (!telefono.isEmpty()) linea += "Tel: " + telefono;
+                if (!cif.isEmpty()) linea += (linea.isEmpty() ? "" : "  |  ") + "CIF: " + cif;
+                Paragraph pContacto = new Paragraph(linea, fuentePequena);
+                pContacto.setAlignment(Element.ALIGN_CENTER);
+                doc.add(pContacto);
+            }
 
             doc.add(new Paragraph(" "));
 
@@ -48,8 +66,6 @@ public class PdfTicket {
             doc.add(new Paragraph("Atendido por: " + Sesion.getUsuarioActual().getNombre(), fuenteNormal));
 
             doc.add(new Paragraph(" "));
-
-            // Línea separadora
             doc.add(new Chunk(new LineSeparator()));
             doc.add(new Paragraph(" "));
 
@@ -58,7 +74,6 @@ public class PdfTicket {
             tabla.setWidthPercentage(100);
             tabla.setWidths(new float[]{4f, 1f, 2f, 2f});
 
-            // Cabecera tabla
             for (String cab : new String[]{"Producto", "Cant.", "P. Unit.", "Subtotal"}) {
                 PdfPCell celda = new PdfPCell(new Phrase(cab, fuenteNegrita));
                 celda.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -67,7 +82,6 @@ public class PdfTicket {
                 tabla.addCell(celda);
             }
 
-            // Filas de productos
             for (LineaPedido linea : lineas) {
                 PdfPCell cNombre = new PdfPCell(new Phrase(linea.getNombreProducto(), fuenteNormal));
                 PdfPCell cCant   = new PdfPCell(new Phrase(String.valueOf(linea.getCantidad()), fuenteNormal));
@@ -101,7 +115,6 @@ public class PdfTicket {
 
             doc.add(new Paragraph(" "));
 
-            // Pie
             Paragraph pie = new Paragraph("¡Gracias por su visita!", fuentePequena);
             pie.setAlignment(Element.ALIGN_CENTER);
             doc.add(pie);

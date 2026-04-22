@@ -90,3 +90,19 @@ INSERT INTO productos (nombre, descripcion, precio, categoria) VALUES
 ('Refresco', 'Coca-Cola, Fanta o Sprite', 2.50, 'bebida'),
 ('Vino de la casa', 'Copa de vino tinto o blanco', 3.00, 'bebida'),
 ('Cerveza', 'Caña o botella', 2.00, 'bebida');
+
+-- =============================================
+-- Datos de prueba
+-- =============================================
+
+-- Tabla de configuración del restaurante
+CREATE TABLE configuracion (
+    clave VARCHAR(50) PRIMARY KEY,
+    valor VARCHAR(255) NOT NULL
+);
+
+INSERT INTO configuracion (clave, valor) VALUES
+('nombre', 'Mi Restaurante'),
+('direccion', 'Calle Mayor, 1'),
+('telefono', '600 000 000'),
+('cif', 'B12345678');

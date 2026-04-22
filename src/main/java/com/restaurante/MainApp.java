@@ -15,6 +15,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(loader.load(), 400, 300);
         stage.setTitle("Gestor Restaurante");
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
 
