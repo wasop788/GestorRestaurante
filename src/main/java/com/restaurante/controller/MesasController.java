@@ -32,10 +32,10 @@ public class MesasController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblUsuario.setText("Hola, " + Sesion.getUsuarioActual().getNombre());
-        boolean esAdmin = Sesion.getUsuarioActual().getRol().equals("admin");
-        btnGestionMesas.setVisible(esAdmin);
-        btnGestionUsuarios.setVisible(esAdmin);
-        btnConfiguracion.setVisible(esAdmin);
+        // Todos los botones siempre visibles
+        btnGestionMesas.setVisible(true);
+        btnGestionUsuarios.setVisible(true);
+        btnConfiguracion.setVisible(true);
         cargarMesas();
 
         Platform.runLater(() -> {
@@ -76,6 +76,18 @@ public class MesasController implements Initializable {
         return tarjeta;
     }
 
+    private boolean esAdmin() {
+        return Sesion.getUsuarioActual().getRol().equals("admin");
+    }
+
+    private void mostrarAccesoDenegado() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Acceso denegado");
+        alert.setHeaderText(null);
+        alert.setContentText("Solo el administrador puede acceder a esta sección.");
+        alert.showAndWait();
+    }
+
     private void abrirPedido(Mesa mesa) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -95,6 +107,7 @@ public class MesasController implements Initializable {
 
     @FXML
     private void abrirGestionMesas() {
+        if (!esAdmin()) { mostrarAccesoDenegado(); return; }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/gestion_mesas.fxml")
@@ -110,6 +123,7 @@ public class MesasController implements Initializable {
 
     @FXML
     private void abrirGestionUsuarios() {
+        if (!esAdmin()) { mostrarAccesoDenegado(); return; }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/gestion_usuarios.fxml")
@@ -125,6 +139,7 @@ public class MesasController implements Initializable {
 
     @FXML
     private void abrirConfiguracion() {
+        if (!esAdmin()) { mostrarAccesoDenegado(); return; }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/configuracion.fxml")
@@ -140,13 +155,7 @@ public class MesasController implements Initializable {
 
     @FXML
     private void abrirCarta() {
-        if (!Sesion.getUsuarioActual().getRol().equals("admin")) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Acceso denegado");
-            alert.setContentText("Solo el administrador puede gestionar la carta.");
-            alert.showAndWait();
-            return;
-        }
+        if (!esAdmin()) { mostrarAccesoDenegado(); return; }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/carta.fxml")

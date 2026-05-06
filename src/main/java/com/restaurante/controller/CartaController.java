@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -37,6 +38,21 @@ public class CartaController implements Initializable {
         colPrecio.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrecio()).asObject());
         colDisponible.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isDisponible()).asObject());
 
+        // Colorear filas: productos desactivados en gris claro
+        tableProductos.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Producto item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
+                } else if (!item.isDisponible()) {
+                    setStyle("-fx-background-color: #f0f0f0; -fx-text-fill: #999999;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+
         cmbCategoria.setItems(FXCollections.observableArrayList(
                 "entrante", "principal", "postre", "bebida"
         ));
@@ -51,7 +67,8 @@ public class CartaController implements Initializable {
     }
 
     private void cargarTabla() {
-        List<Producto> productos = productoDAO.obtenerTodos();
+        // Usar obtenerTodosParaCarta para ver activos e inactivos
+        List<Producto> productos = productoDAO.obtenerTodosParaCarta();
         tableProductos.setItems(FXCollections.observableArrayList(productos));
     }
 
@@ -113,6 +130,10 @@ public class CartaController implements Initializable {
             mostrarAlerta("Selecciona un producto primero.");
             return;
         }
+        if (!productoSeleccionado.isDisponible()) {
+            mostrarAlerta("Este producto ya está desactivado.");
+            return;
+        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setContentText("¿Desactivar el producto \"" + productoSeleccionado.getNombre() + "\"?");
         confirm.showAndWait().ifPresent(r -> {
@@ -133,6 +154,7 @@ public class CartaController implements Initializable {
             Stage stage = (Stage) tableProductos.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 750, 550));
             stage.setTitle("Gestor Restaurante — Mesas");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

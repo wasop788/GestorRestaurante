@@ -52,6 +52,24 @@ public class PedidoController implements Initializable {
         colCantidad.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getCantidad()).asObject());
         colPrecio.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getPrecioUnitario()).asObject());
         colSubtotal.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getSubtotal()).asObject());
+
+        // Colorear productos no disponibles en gris en la lista
+        listProductos.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Producto item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setStyle("");
+                } else if (!item.isDisponible()) {
+                    setText(item.getNombre() + " - " + String.format("%.2f", item.getPrecio()) + "€ (No disponible)");
+                    setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
+                } else {
+                    setText(item.getNombre() + " - " + String.format("%.2f", item.getPrecio()) + "€");
+                    setStyle("");
+                }
+            }
+        });
     }
 
     public void setMesa(Mesa mesa, MesasController mesasController, Stage stage) {
@@ -61,19 +79,16 @@ public class PedidoController implements Initializable {
 
         lblTitulo.setText("Mesa " + mesa.getNumero());
 
-        // Buscar pedido abierto existente o crear uno nuevo
+        // Si la mesa ya tiene un pedido abierto (estaba ocupada), lo recuperamos
+        // Si no, NO creamos pedido todavía — se creará al añadir el primer producto
         pedidoActual = pedidoDAO.obtenerPedidoAbiertoByMesa(mesa.getId());
-        if (pedidoActual == null) {
-            pedidoActual = pedidoDAO.crearPedido(mesa.getId(), Sesion.getUsuarioActual().getId());
-            // NO marcamos la mesa como ocupada aquí todavía
-        }
 
         cargarProductos();
         cargarLineas();
     }
 
     private void cargarProductos() {
-        todosProductos = productoDAO.obtenerTodos();
+        todosProductos = productoDAO.obtenerTodosParaPedido();
         listProductos.setItems(FXCollections.observableArrayList(todosProductos));
 
         List<String> categorias = todosProductos.stream()
@@ -106,6 +121,23 @@ public class PedidoController implements Initializable {
             mostrarAlerta("Selecciona un producto de la carta.");
             return;
         }
+
+        // Comprobar si el producto está disponible
+        if (!seleccionado.isDisponible()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Producto no disponible");
+            alert.setHeaderText(null);
+            alert.setContentText("El producto \"" + seleccionado.getNombre() + "\" no se encuentra disponible actualmente.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Crear el pedido en BD solo ahora, cuando se añade el primer producto
+        if (pedidoActual == null) {
+            pedidoActual = pedidoDAO.crearPedido(mesa.getId(), Sesion.getUsuarioActual().getId());
+            mesaDAO.actualizarEstado(mesa.getId(), "ocupada");
+        }
+
         LineaPedido linea = new LineaPedido(
                 pedidoActual.getId(),
                 seleccionado.getId(),
@@ -114,16 +146,15 @@ public class PedidoController implements Initializable {
                 seleccionado.getPrecio()
         );
         pedidoDAO.agregarLinea(linea);
-
-        // Marcar mesa como ocupada solo al añadir el primer producto
-        if (tablePedido.getItems().isEmpty()) {
-            mesaDAO.actualizarEstado(mesa.getId(), "ocupada");
-        }
-
         cargarLineas();
     }
 
     private void cargarLineas() {
+        if (pedidoActual == null) {
+            tablePedido.setItems(FXCollections.observableArrayList());
+            lblTotal.setText("Total: 0.00 €");
+            return;
+        }
         List<LineaPedido> lineas = pedidoDAO.obtenerLineas(pedidoActual.getId());
         tablePedido.setItems(FXCollections.observableArrayList(lineas));
         pedidoActual = pedidoDAO.obtenerPorId(pedidoActual.getId());
@@ -132,7 +163,7 @@ public class PedidoController implements Initializable {
 
     @FXML
     private void cobrar() {
-        if (tablePedido.getItems().isEmpty()) {
+        if (pedidoActual == null || tablePedido.getItems().isEmpty()) {
             mostrarAlerta("El pedido está vacío.");
             return;
         }
@@ -175,12 +206,8 @@ public class PedidoController implements Initializable {
 
     @FXML
     private void volver() {
-        // Si el pedido está vacío al salir, lo eliminamos y dejamos la mesa libre
-        if (tablePedido.getItems().isEmpty()) {
-            pedidoDAO.eliminarPedidoVacio(pedidoActual.getId());
-            mesaDAO.actualizarEstado(mesa.getId(), "libre");
-        }
-
+        // Si nunca se creó pedido (salió sin pedir nada), simplemente vuelve
+        // No hay nada que limpiar en BD
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/restaurante/views/mesas.fxml")
