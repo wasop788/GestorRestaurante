@@ -39,9 +39,22 @@ GestorRestaurante es una aplicación de escritorio desarrollada en Java con Java
 
 ## Requisitos previos
 
-- Java 17 o superior
-- MySQL 8
-- Maven 3.6+
+- MySQL 8 instalado y en ejecución
+- El usuario `root` de MySQL debe tener la contraseña **`admin`**
+- Maven 3.6+ (solo para entorno de desarrollo)
+
+> **Nota**: Java y JavaFX están incluidos en el instalador `.exe`. No es necesario instalarlos por separado en el equipo donde se vaya a usar la aplicación.
+
+---
+
+## Instalación con el instalador .exe
+
+1. Instalar MySQL 8 desde https://dev.mysql.com/downloads/installer
+    - Durante la instalación, establecer la contraseña del usuario `root` como **`admin`**
+2. Ejecutar `database.sql` desde MySQL Workbench para crear la base de datos
+3. Ejecutar `GestorRestaurante-1.0.exe` como administrador
+4. Seguir el asistente de instalación
+5. Abrir el programa desde el acceso directo del escritorio
 
 ---
 
@@ -62,28 +75,23 @@ Abre MySQL Workbench y ejecuta el script:
 database.sql
 ```
 
-### 3. Configurar la contraseña de MySQL
+### 3. Verificar la configuración de MySQL en el código
 
-Abre `src/main/java/com/restaurante/util/Conexion.java` y cambia la contraseña:
+Abre `src/main/java/com/restaurante/util/Conexion.java` y comprueba que los datos de conexión coinciden con tu instalación de MySQL:
 
 ```java
-private static final String PASSWORD = "tu_password";
+private static final String URL = "jdbc:mysql://localhost:3306/gestor_restaurante?useSSL=false&serverTimezone=Europe/Madrid";
+private static final String USUARIO = "root";
+private static final String PASSWORD = "admin";
 ```
+
+Si tu MySQL tiene una contraseña diferente, cámbiala aquí antes de ejecutar.
 
 ### 4. Ejecutar la aplicación
 
 ```bash
 mvn javafx:run
 ```
-
----
-
-## Instalación con el instalador .exe
-
-1. Instalar MySQL 8 y ejecutar `database.sql` desde MySQL Workbench
-2. Ejecutar `GestorRestaurante-1.0.exe` como administrador
-3. Seguir el asistente de instalación
-4. Abrir el programa desde el acceso directo del escritorio
 
 ---
 
@@ -96,6 +104,26 @@ mvn javafx:run
 
 ---
 
+## Configuración de MySQL requerida
+
+La aplicación se conecta a MySQL con estos parámetros:
+
+| Parámetro | Valor |
+|---|---|
+| Host | localhost |
+| Puerto | 3306 |
+| Usuario | root |
+| Contraseña | admin |
+| Base de datos | gestor_restaurante |
+
+> Si tu instalación de MySQL tiene una contraseña diferente para `root`, ejecuta esto en MySQL Workbench para cambiarla:
+> ```sql
+> ALTER USER 'root'@'localhost' IDENTIFIED BY 'admin';
+> FLUSH PRIVILEGES;
+> ```
+
+---
+
 ## Estructura del proyecto
 
 ```
@@ -103,15 +131,16 @@ src/
 └── main/
     ├── java/
     │   └── com/restaurante/
-    │       ├── controller/    # Controladores JavaFX
-    │       ├── dao/           # Acceso a base de datos
-    │       ├── model/         # Clases del modelo
-    │       └── util/          # Utilidades (conexión, sesión, PDF)
+    │       ├── controller/    ← controladores JavaFX
+    │       ├── dao/           ← acceso a base de datos
+    │       ├── model/         ← clases Java (Mesa, Producto...)
+    │       └── util/          ← utilidades (conexión, sesión, PDF)
     └── resources/
         └── com/restaurante/
-            ├── views/         # Archivos FXML (pantallas)
-            └── images/        # Icono de la aplicación
-database.sql                   # Script de creación de la BD
+            ├── views/         ← archivos FXML (pantallas)
+            └── images/        ← icono de la aplicación
+database.sql                   ← script de creación de la BD
+instalador/                    ← instalador .exe para Windows
 ```
 
 ---
