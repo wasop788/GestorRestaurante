@@ -47,11 +47,23 @@ GestorRestaurante es una aplicación de escritorio desarrollada en Java con Java
 
 ---
 
-## Instalación con el instalador .exe
+## Descarga e instalación
+
+### Descargar el instalador
+
+El instalador está disponible en la sección **Releases** del repositorio:
+
+```
+https://github.com/wasop788/GestorRestaurante/releases
+```
+
+Descarga el archivo `GestorRestaurante-1.0.exe` de la última release.
+
+### Pasos de instalación
 
 1. Instalar MySQL 8 desde https://dev.mysql.com/downloads/installer
     - Durante la instalación, establecer la contraseña del usuario `root` como **`admin`**
-2. Ejecutar `database.sql` desde MySQL Workbench para crear la base de datos
+2. Abrir MySQL Workbench y ejecutar el script `database.sql` del repositorio para crear la base de datos
 3. Ejecutar `GestorRestaurante-1.0.exe` como administrador
 4. Seguir el asistente de instalación
 5. Abrir el programa desde el acceso directo del escritorio
@@ -92,6 +104,30 @@ Si tu MySQL tiene una contraseña diferente, cámbiala aquí antes de ejecutar.
 ```bash
 mvn javafx:run
 ```
+
+---
+
+## Generar el instalador
+
+Para generar un nuevo instalador desde el código fuente:
+
+**Paso 1 — Compilar el proyecto:**
+```bash
+mvn clean package
+copy target\GestorRestaurante-full.jar dist\
+```
+
+**Paso 2 — Crear el runtime con JavaFX:**
+```bash
+jlink --module-path "C:\Users\jorge\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\jorge\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\jorge\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\jorge\.m2\repository\org\openjfx\javafx-base\21;C:\Users\jorge\.jdks\openjdk-25\jmods" --add-modules java.base,java.sql,java.desktop,java.naming,java.security.jgss,javafx.controls,javafx.fxml,javafx.graphics,javafx.base --output runtime-fx
+```
+
+**Paso 3 — Generar el instalador:**
+```bash
+jpackage --input dist\ --main-jar GestorRestaurante-full.jar --main-class com.restaurante.MainApp --name "GestorRestaurante" --app-version "1.0" --vendor "Digitech" --description "Sistema de gestion para restaurante" --win-shortcut --win-menu --win-dir-chooser --icon src\main\resources\com\restaurante\images\icono.ico --dest instalador\ --type exe --runtime-image runtime-fx
+```
+
+El instalador generado se sube a GitHub Releases, no al repositorio.
 
 ---
 
@@ -140,7 +176,8 @@ src/
             ├── views/         ← archivos FXML (pantallas)
             └── images/        ← icono de la aplicación
 database.sql                   ← script de creación de la BD
-instalador/                    ← instalador .exe para Windows
+dist/                          ← JAR y dependencias para el instalador
+runtime-fx/                    ← runtime Java+JavaFX para el instalador
 ```
 
 ---
