@@ -11,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -67,7 +66,6 @@ public class CartaController implements Initializable {
     }
 
     private void cargarTabla() {
-        // Usar obtenerTodosParaCarta para ver activos e inactivos
         List<Producto> productos = productoDAO.obtenerTodosParaCarta();
         tableProductos.setItems(FXCollections.observableArrayList(productos));
     }
@@ -130,12 +128,9 @@ public class CartaController implements Initializable {
             mostrarAlerta("Selecciona un producto primero.");
             return;
         }
-        if (!productoSeleccionado.isDisponible()) {
-            mostrarAlerta("Este producto ya está desactivado.");
-            return;
-        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setContentText("¿Desactivar el producto \"" + productoSeleccionado.getNombre() + "\"?");
+        confirm.setTitle("Eliminar producto");
+        confirm.setContentText("¿Eliminar definitivamente el producto \"" + productoSeleccionado.getNombre() + "\"?\n\nEsta acción no se puede deshacer. Si solo quieres ocultarlo de la carta, desmarca la casilla 'Disponible' y guarda.");
         confirm.showAndWait().ifPresent(r -> {
             if (r == ButtonType.OK) {
                 productoDAO.eliminar(productoSeleccionado.getId());

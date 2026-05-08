@@ -85,7 +85,7 @@ public class ProductoDAO {
     }
 
     public boolean eliminar(int id) {
-        String sql = "UPDATE productos SET disponible = false WHERE id = ?";
+        String sql = "DELETE FROM productos WHERE id = ?";
         try (PreparedStatement ps = Conexion.getConexion().prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
